@@ -3,13 +3,16 @@
 #include <stdbool.h>
 
 //******************************************** Defines and Macros ****************************************************//
+#define ERROR_CODE      (1)
+#define WINDOW_WIDTH    (800)
+#define WINDOW_HEIGHT   (600)
 
 //*********************************************** Declarations *******************************************************//
 //Global variables:
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Event* event;
-bool game_not_closed = true;
+bool game_is_running = true;
 
 //Structs:
 typedef struct toolbar Toolbar;
@@ -40,38 +43,64 @@ struct fluid {
 };
 
 //******************************************* Function Declarations **************************************************//
-void run();
-void setup();
-void process_input();
-void update();
-void render();
+int run();
+int setup();
+int process_input();
+int update();
+int render();
+void quit();
 
 //******************************************* Function Definitions ***************************************************//
-void run() {
-    SDL_Init(SDL_INIT_EVERYTHING);
-    setup();
-    while (game_not_closed) {
+int run() {
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+        fprintf(stderr, "Failed to initialize SDL");
+        exit(ERROR_CODE);
+    }
+    game_is_running = setup();
+    while (game_is_running) {
         process_input();
         update();
         render();
     }
+    quit();
+}
+
+int setup() {
+    SDL_CreateWindow(
+            NULL,
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            WINDOW_WIDTH,
+            WINDOW_HEIGHT,
+            SDL_WINDOW_BORDERLESS
+    );
+    if (!window) {
+        fprintf(stderr, "Failed to create window");
+        exit(ERROR_CODE);
+    }
+    SDL_CreateRenderer(window, -1, 0);
+    if (!renderer) {
+        fprintf(stderr, "Failed to create renderer");
+        exit(ERROR_CODE);
+    }
+}
+
+int process_input() {
+    SDL_PollEvent(event);
+}
+
+int update() {
+
+}
+
+int render() {
+
+}
+
+void quit() {
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     SDL_Quit();
-}
-
-void setup() {
-
-}
-
-void process_input() {
-
-}
-
-void update() {
-
-}
-
-void render() {
-
 }
 
 //*************************************************** Main ***********************************************************//
