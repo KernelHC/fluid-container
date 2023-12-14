@@ -6,12 +6,38 @@
 
 //*********************************************** Declarations *******************************************************//
 //Global variables:
+SDL_Window* window;
+SDL_Renderer* renderer;
+SDL_Event* event;
 bool game_not_closed = true;
 
-//
+//Structs:
+typedef struct toolbar Toolbar;
+typedef struct container Container;
+typedef struct container_part ContainerPart;
+typedef struct particle Particle;
+typedef struct fluid Fluid;
 
 //******************************************** Struct Definitions ****************************************************//
+struct toolbar {
 
+};
+
+struct container {
+
+};
+
+struct container_part {
+
+};
+
+struct particle {
+
+};
+
+struct fluid {
+
+};
 
 //******************************************* Function Declarations **************************************************//
 void run();
