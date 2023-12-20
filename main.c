@@ -9,9 +9,9 @@
 
 //*********************************************** Declarations *******************************************************//
 //Global variables:
-SDL_Window* window;
-SDL_Renderer* renderer;
-SDL_Event* event;
+SDL_Window* window = NULL;
+SDL_Renderer* renderer = NULL;
+SDL_Event* event = NULL;
 bool game_is_running = true;
 
 //Structs:
@@ -66,7 +66,7 @@ int run() {
 }
 
 int setup() {
-    SDL_CreateWindow(
+    window = SDL_CreateWindow(
             NULL,
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
@@ -78,11 +78,11 @@ int setup() {
         fprintf(stderr, "Failed to create window");
         exit(ERROR_CODE);
     }
-    SDL_CreateRenderer(window, -1, 0);
+    renderer = SDL_CreateRenderer(window, -1, 0);
     if (!renderer) {
-        fprintf(stderr, "Failed to create renderer");
         exit(ERROR_CODE);
     }
+    return true;
 }
 
 int process_input() {
