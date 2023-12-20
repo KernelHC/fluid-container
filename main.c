@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <SDL.h>
 #include <stdbool.h>
+#include <string.h>
+#include <pthread.h>
+#include <fcntl.h>
 
 //******************************************** Defines and Macros ****************************************************//
 #define ERROR_CODE      (1)
@@ -8,22 +11,30 @@
 #define WINDOW_HEIGHT   (600)
 
 //*********************************************** Declarations *******************************************************//
-//Global variables:
-SDL_Window* window;
-SDL_Renderer* renderer;
-SDL_Event* event;
-bool game_is_running = true;
-
 //Structs:
+typedef struct button Button;
 typedef struct toolbar Toolbar;
 typedef struct container Container;
 typedef struct container_part ContainerPart;
 typedef struct particle Particle;
 typedef struct fluid Fluid;
 
-//******************************************** Struct Definitions ****************************************************//
-struct toolbar {
+//Global variables:
+SDL_Window* window = NULL;
+SDL_Renderer* renderer = NULL;
+bool game_is_running = true;
+Toolbar* toolbar;
+Container* container;
 
+//******************************************** Struct Definitions ****************************************************//
+struct button {
+    SDL_Rect shape;
+    char* text;
+};
+
+struct toolbar {
+    SDL_Rect shape;
+    Button* buttons;
 };
 
 struct container {
@@ -66,7 +77,7 @@ int run() {
 }
 
 int setup() {
-    SDL_CreateWindow(
+    window = SDL_CreateWindow(
             NULL,
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
@@ -78,15 +89,28 @@ int setup() {
         fprintf(stderr, "Failed to create window");
         exit(ERROR_CODE);
     }
-    SDL_CreateRenderer(window, -1, 0);
+    renderer = SDL_CreateRenderer(window, -1, 0);
     if (!renderer) {
-        fprintf(stderr, "Failed to create renderer");
         exit(ERROR_CODE);
     }
+    return true;
 }
 
 int process_input() {
-    SDL_PollEvent(event);
+    SDL_Event event;
+    SDL_PollEvent(&event);
+    switch (event.type) {
+        case SDL_QUIT: {
+            game_is_running = false;
+        }
+        case SDL_MOUSEBUTTONDOWN: {
+
+            break;
+        }
+        default: {
+            break;
+        }
+    }
 }
 
 int update() {
