@@ -18,6 +18,7 @@ typedef struct container Container;
 typedef struct container_part ContainerPart;
 typedef struct particle Particle;
 typedef struct fluid Fluid;
+typedef struct pen Pen;
 
 //Global variables:
 SDL_Window* window = NULL;
@@ -53,6 +54,10 @@ struct fluid {
 
 };
 
+struct pen {
+
+};
+
 //******************************************* Function Declarations **************************************************//
 int run();
 int setup();
@@ -60,6 +65,13 @@ int process_input();
 int update();
 int render();
 void quit();
+
+void drawToolbar();
+void drawButtons();
+void drawContainer();
+void drawFluid();
+
+void updateFluid();
 
 //******************************************* Function Definitions ***************************************************//
 int run() {
@@ -78,12 +90,12 @@ int run() {
 
 int setup() {
     window = SDL_CreateWindow(
-            NULL,
+            "Fluid Container",
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
             WINDOW_WIDTH,
             WINDOW_HEIGHT,
-            SDL_WINDOW_BORDERLESS
+            SDL_WINDOW_OPENGL
     );
     if (!window) {
         fprintf(stderr, "Failed to create window");
@@ -114,17 +126,46 @@ int process_input() {
 }
 
 int update() {
-
+    updateFluid();
 }
 
 int render() {
-
+    SDL_RenderClear(renderer);
+    drawToolbar();
+    drawButtons();
+    drawContainer();
+    drawFluid();
 }
 
 void quit() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+}
+
+
+void drawToolbar() {
+
+}
+
+
+void drawButtons() {
+
+}
+
+
+void drawContainer() {
+
+}
+
+
+void drawFluid() {
+
+}
+
+
+void updateFluid() {
+
 }
 
 //*************************************************** Main ***********************************************************//
