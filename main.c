@@ -4,18 +4,20 @@
 #include <string.h>
 #include <pthread.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 //******************************************** Defines and Macros ****************************************************//
 #define ERROR_CODE      (1)
 #define WINDOW_WIDTH    (800)
 #define WINDOW_HEIGHT   (600)
+#define CONTAINER_SIZE  (1000)
 
 //*********************************************** Declarations *******************************************************//
 //Structs:
+typedef struct coord Coord;
 typedef struct button Button;
 typedef struct toolbar Toolbar;
 typedef struct container Container;
-typedef struct container_part ContainerPart;
 typedef struct particle Particle;
 typedef struct fluid Fluid;
 typedef struct pen Pen;
@@ -28,10 +30,16 @@ Toolbar* toolbar;
 Container* container;
 
 //******************************************** Struct Definitions ****************************************************//
+struct coord {
+    int x;
+    int y;
+};
+
 struct button {
     SDL_Rect shape;
     char* text;
 };
+
 
 struct toolbar {
     SDL_Rect shape;
@@ -39,11 +47,7 @@ struct toolbar {
 };
 
 struct container {
-
-};
-
-struct container_part {
-
+    Coord shape[CONTAINER_SIZE];
 };
 
 struct particle {
@@ -72,6 +76,11 @@ void drawContainer();
 void drawFluid();
 
 void updateFluid();
+
+void processMouseDown(int pos_x, int pos_y);
+bool clickToolbar(int pos_x, int pos_y);
+bool clickCanvas(int pos_x, int pos_y);
+bool clickStartSim(int pos_x, int pos_y);
 
 //******************************************* Function Definitions ***************************************************//
 int run() {
@@ -111,12 +120,14 @@ int setup() {
 int process_input() {
     SDL_Event event;
     SDL_PollEvent(&event);
+    int x,y;
+    SDL_GetMouseState(&x, &y);
     switch (event.type) {
         case SDL_QUIT: {
             game_is_running = false;
         }
         case SDL_MOUSEBUTTONDOWN: {
-
+            processMouseDown(x,y);
             break;
         }
         default: {
@@ -166,6 +177,28 @@ void drawFluid() {
 
 void updateFluid() {
 
+}
+
+
+void processMouseDown(int x, int y) {
+    clickToolbar(x, y);
+    clickCanvas(x, y);
+    clickStartSim(x, y);
+}
+
+
+bool clickToolbar(int x, int y) {
+    return true;
+}
+
+
+bool clickCanvas(int x, int y) {
+    return true;
+}
+
+
+bool clickStartSim(int x, int y) {
+    return true;
 }
 
 //*************************************************** Main ***********************************************************//
