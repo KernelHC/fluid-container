@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <SDL.h>
 #include <stdbool.h>
 #include <string.h>
@@ -10,7 +11,7 @@
 #define ERROR_CODE      (1)
 #define WINDOW_WIDTH    (800)
 #define WINDOW_HEIGHT   (600)
-#define CONTAINER_SIZE  (1000)
+#define INITIAL_CONTAINER_SIZE  (1000)
 
 //*********************************************** Declarations *******************************************************//
 //Structs:
@@ -21,6 +22,10 @@ typedef struct container Container;
 typedef struct particle Particle;
 typedef struct fluid Fluid;
 typedef struct pen Pen;
+
+//typedef enum {
+//    Fail
+//} ErrorCode;
 
 //Global variables:
 SDL_Window* window = NULL;
@@ -47,7 +52,8 @@ struct toolbar {
 };
 
 struct container {
-    Coord shape[CONTAINER_SIZE];
+    int size;
+    Coord* shape;
 };
 
 struct particle {
@@ -71,8 +77,12 @@ int render();
 void quit();
 
 void drawToolbar();
+
 void drawButtons();
+
 void drawContainer();
+void resizeContainer();
+
 void drawFluid();
 
 void updateFluid();
@@ -81,7 +91,14 @@ void processMouseDown(int pos_x, int pos_y);
 bool clickToolbar(int pos_x, int pos_y);
 bool clickCanvas(int pos_x, int pos_y);
 bool clickStartSim(int pos_x, int pos_y);
+bool clickInToolbar(int pos_x, int pos_y);
 
+void checkAndLog(void* allocated, char* error_message) {
+    if (!allocated) {
+        fprintf(stderr, "%s", error_message);
+        exit(ERROR_CODE);
+    }
+}
 //******************************************* Function Definitions ***************************************************//
 int run() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -112,6 +129,17 @@ int setup() {
     }
     renderer = SDL_CreateRenderer(window, -1, 0);
     if (!renderer) {
+        fprintf(stderr, "Malloc failed!");
+        exit(ERROR_CODE);
+    }
+    container = malloc(sizeof (Container));
+    if (!container) {
+        fprintf(stderr, "Malloc failed!");
+        exit(ERROR_CODE);
+    }
+    container->shape = malloc(sizeof (Coord*));
+    if (!container->shape) {
+        fprintf(stderr, "Malloc failed!");
         exit(ERROR_CODE);
     }
     return true;
@@ -146,6 +174,7 @@ int render() {
     drawButtons();
     drawContainer();
     drawFluid();
+    SDL_RenderPresent(renderer);
 }
 
 void quit() {
@@ -153,23 +182,27 @@ void quit() {
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
-
+//*********************************************************************//
 
 void drawToolbar() {
 
 }
 
-
+//*********************************************************************//
 void drawButtons() {
 
 }
 
-
+//*********************************************************************//
 void drawContainer() {
 
 }
 
+void resizeContainer() {
 
+}
+
+//*********************************************************************//
 void drawFluid() {
 
 }
@@ -188,17 +221,23 @@ void processMouseDown(int x, int y) {
 
 
 bool clickToolbar(int x, int y) {
+    if (!clickInToolbar(x, y)) return false;
     return true;
 }
 
 
 bool clickCanvas(int x, int y) {
+    SDL_RenderDrawPoint(renderer, x ,y);
     return true;
 }
 
 
 bool clickStartSim(int x, int y) {
     return true;
+}
+
+bool clickInToolbar(int x, int y) {
+    return false;
 }
 
 //*************************************************** Main ***********************************************************//
